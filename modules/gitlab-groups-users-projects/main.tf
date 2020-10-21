@@ -15,18 +15,18 @@ resource "gitlab_user" "users" {
 }
 
 locals {
-  membership = flatten([for user_name, user in var.users:
-                flatten([for group_name in user["groups"]:
-                {
-                  "user_name" = user_name
-                  "group_name" = group_name
-                }
-                ])
+  membership = flatten([for user_name, user in var.users :
+    flatten([for group_name in user["groups"] :
+      {
+        "user_name"  = user_name
+        "group_name" = group_name
+      }
+    ])
   ])
 }
 
 resource "gitlab_group_membership" "group_memberships" {
-  for_each =  { for idx, record in local.membership : idx => record }
+  for_each     = { for idx, record in local.membership : idx => record }
   group_id     = gitlab_group.groups[each.value.group_name].id
   user_id      = gitlab_user.users[each.value.user_name].id
   access_level = "maintainer"
@@ -35,17 +35,16 @@ resource "gitlab_group_membership" "group_memberships" {
 
 
 resource "gitlab_project" "projects" {
-  for_each = var.projects
-  name     = each.value["name"]
+  for_each     = var.projects
+  name         = each.value["name"]
   namespace_id = gitlab_group.groups[each.value["group_name"]].id
 }
 
 output "debug" {
   value = {
     "membership" = local.membership
-    "groups" = gitlab_group.groups
-    "users" = gitlab_user.users
+    "groups"     = gitlab_group.groups
+    "users"      = gitlab_user.users
   }
-
 }
 

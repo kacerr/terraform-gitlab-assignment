@@ -10,7 +10,7 @@ variable "gitlab_base_url" {
 module "gitlab_users_and_groups" {
   source = "../modules/gitlab-groups-users-projects"
 
-  gitlab_token = var.gitlab_token
+  gitlab_token    = var.gitlab_token
   gitlab_base_url = var.gitlab_base_url
 
   groups = {
@@ -96,11 +96,11 @@ module "gitlab_users_and_groups" {
 
   projects = {
     "1st red project" = {
-      name        = "1st project"
+      name       = "1st project"
       group_name = "red"
     }
     "1st green project" = {
-      name        = "1st project"
+      name       = "1st project"
       group_name = "green"
     }
   }
