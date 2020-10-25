@@ -17,3 +17,12 @@ terraform apply
   - conirm existence of stuff that is supposed to exist
 
 ```
+
+## test usage
+```
+# go and tooling has to be installed
+# i guess that go test itself collects required dependencies from the internet and then runs tests
+
+cd tests
+go test -timeout 30m
+```
