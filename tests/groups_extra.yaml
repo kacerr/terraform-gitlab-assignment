@@ -1,0 +1,12 @@
+"blue":
+  "description": "description of blue"
+  "name": "blue"
+  "path": "path-to-blue"
+"green":
+  "description": "description of green"
+  "name": "green"
+  "path": "path-to-green"
+"red":
+  "description": "description of red"
+  "name": "red"
+  "path": "path-to-red"

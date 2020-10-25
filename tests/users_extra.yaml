@@ -1,0 +1,18 @@
+"user-100":
+  "email": "user-100@email.cz"
+  "groups":
+  - "red"
+  "name": "user-100"
+  "username": "user-100-name"
+"user-200":
+  "email": "user-200@email.cz"
+  "groups":
+    - "blue"
+  "name": "user-200"
+  "username": "user-200-name"
+"user-300":
+  "email": "user-300@email.cz"
+  "groups":
+    - "blue"
+  "name": "user-300"
+  "username": "user-300-name"

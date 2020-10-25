@@ -3,7 +3,7 @@ variable "gitlab_token" {
 }
 
 variable "gitlab_base_url" {
-  type    = string
+  type = string
 }
 
 
@@ -28,10 +28,10 @@ variable "users" {
   type = map(object({ name = string, username = string, email = string, groups = set(string) }))
   default = {
     "example-user" = {
-      name        = "example-user"
+      name     = "example-user"
       username = "example-user-name"
-      email = "example-user@email.cz"
-      groups = ["example-group", "example-group-2"]
+      email    = "example-user@email.cz"
+      groups   = ["example-group", "example-group-2"]
     }
   }
 }
@@ -40,7 +40,7 @@ variable "projects" {
   type = map(object({ name = string, group_name = string }))
   default = {
     "example-project" = {
-      name        = "example-project"
+      name       = "example-project"
       group_name = "example-group-2"
     }
   }

@@ -7,31 +7,9 @@ variable "gitlab_base_url" {
   default = "http://localhost:8080/api/v4/"
 }
 
-module "gitlab_users_and_groups" {
-  source = "../modules/gitlab-groups-users-projects"
-
-  gitlab_token    = var.gitlab_token
-  gitlab_base_url = var.gitlab_base_url
-
-  groups = {
-    "red" = {
-      name        = "red"
-      path        = "path-to-red"
-      description = "description of red"
-    }
-    "green" = {
-      name        = "green"
-      path        = "path-to-green"
-      description = "description of green"
-    }
-    "blue" = {
-      name        = "blue"
-      path        = "path-to-blue"
-      description = "description of blue"
-    }
-  }
-
-  users = {
+variable "users" {
+  type = map(object({ name = string, username = string, email = string, groups = set(string) }))
+  default = {
     "user-1" = {
       name     = "user-1"
       username = "user-1-name"
@@ -93,20 +71,98 @@ module "gitlab_users_and_groups" {
       groups   = ["blue"]
     }
   }
+}
 
-  projects = {
+variable "groups" {
+  type = map(object({ name = string, path = string, description = string }))
+  default = {
+    "red" = {
+      name        = "red"
+      path        = "path-to-red"
+      description = "description of red"
+    }
+    "green" = {
+      name        = "green"
+      path        = "path-to-green"
+      description = "description of green"
+    }
+    "blue" = {
+      name        = "blue"
+      path        = "path-to-blue"
+      description = "description of blue"
+    }
+  }
+}
+
+variable "projects" {
+  type = map(object({ name = string, group_name = string }))
+  default = {
     "1st red project" = {
-      name       = "1st project"
+      name       = "1st red project"
       group_name = "red"
     }
     "1st green project" = {
-      name       = "1st project"
+      name       = "1st green project"
       group_name = "green"
     }
   }
+}
+
+
+
+
+locals {
+  users_from_file    = try(yamldecode(file("./users_extra.yaml")), {})
+  merged_users       = merge(var.users, local.users_from_file)
+  groups_from_file   = try(yamldecode(file("./groups_extra.yaml")), {})
+  merged_groups      = merge(var.groups, local.groups_from_file)
+  projects_from_file = try(yamldecode(file("./projects_extra.yaml")), {})
+  merged_projects    = merge(var.projects, local.projects_from_file)
+}
+
+
+module "gitlab_users_and_groups" {
+  source = "../modules/gitlab-groups-users-projects"
+
+  gitlab_token    = var.gitlab_token
+  gitlab_base_url = var.gitlab_base_url
+
+  groups   = local.merged_groups
+  users    = local.merged_users
+  projects = local.merged_projects
 
 }
 
 output "debug" {
   value = module.gitlab_users_and_groups.debug
+}
+
+resource "local_file" "users_yaml" {
+  filename = "./data/users.yaml"
+  content  = yamlencode(var.users)
+}
+
+resource "local_file" "users_json" {
+  filename = "./data/users.json"
+  content  = jsonencode(var.users)
+}
+
+resource "local_file" "groups_yaml" {
+  filename = "./data/groups.yaml"
+  content  = yamlencode(var.groups)
+}
+
+resource "local_file" "groups_json" {
+  filename = "./data/groups.json"
+  content  = jsonencode(var.groups)
+}
+
+resource "local_file" "projects_yaml" {
+  filename = "./data/projects.yaml"
+  content  = yamlencode(var.projects)
+}
+
+resource "local_file" "projects_json" {
+  filename = "./data/projects.json"
+  content  = jsonencode(var.projects)
 }
