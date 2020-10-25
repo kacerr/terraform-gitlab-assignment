@@ -25,4 +25,5 @@ terraform apply
 
 cd tests
 go test -timeout 30m
+go test -v -timeout 30m # for "more" granular test results
 ```
